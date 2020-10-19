@@ -56,6 +56,7 @@ client.on('message', (message) => {
 });
 
 // Add role to user after introduction edit
+
 client.on('messageUpdate', (oldMessage, message) => {
   // return if message isn't send in introduce-yourself channel
   if (message.channel.name !== '👋introduce-yourself') return;
