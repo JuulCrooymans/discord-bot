@@ -6,7 +6,8 @@
   "author": "Juul Crooymans <juul.crooymans@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "dependencies": {
     "discord.js": "^12.3.1",
