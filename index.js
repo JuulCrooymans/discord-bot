@@ -1,6 +1,9 @@
-const Discord = require('discord.js');
-const client = new Discord.Client();
 require('dotenv').config();
+const Discord = require('discord.js');
+
+const client = new Discord.Client({
+  partials: ['MESSAGE', 'REACTION'],
+});
 
 // Bot login
 client.login(process.env.DISCORD_BOT_TOKEN);
@@ -10,93 +13,83 @@ client.on('ready', () => {
 });
 
 // Add role to user after introduction
-client.on('message', (message) => {
+client.on('message', async (message) => {
   // return if message isn't send in introduce-yourself channel
   if (message.channel.name !== '👋introduce-yourself') return;
 
-  const hashtags = [
-    '#development',
-    '#design',
-    '#ux-ui',
-    '#film',
-    '#photography',
-    '#marketing',
-    '#vr-ar',
-  ];
+  // return if users is already a member
+  if (message.member._roles.length > 0) return;
 
-  const lowerCaseMessage = message.content.toLocaleLowerCase();
-  const messageArray = lowerCaseMessage.split(' ');
-  const userHashtags = messageArray.filter((word) => hashtags.includes(word)); // filter for user hashtags
+  // add member role
+  const member = await message.member.roles.add('767719049168945212'); // TODO: change to member role in production discord
 
-  if (userHashtags.length > 0) {
-    message.guild.roles.cache.forEach((role) => role.delete());
-  }
-
-  userHashtags.forEach((hashtag) => {
-    const role = hashtag.replace('#', ''); // remove #
-    const discordRole = message.guild.roles.cache.find(
-      (discordRole) => discordRole.name === role
-    );
-
-    if (
-      !message.member._roles.some(
-        (memberRole) => memberRole.id === discordRole.id
-      )
-    ) {
-      message.member.roles
-        .add(discordRole.id)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  });
+  console.log(`New member: ${member.user.username}`);
 });
 
-// Add role to user after introduction edit
-client.on('messageUpdate', (oldMessage, message) => {
-  // return if message isn't send in introduce-yourself channel
-  if (message.channel.name !== '👋introduce-yourself') return;
+// role selector
+client.on('messageReactionAdd', async (reaction, user) => {
+  if (reaction.message.channel.name !== '✅choose-role') return;
 
-  const hashtags = [
-    '#development',
-    '#design',
-    '#ux-ui',
-    '#film',
-    '#photography',
-    '#marketing',
-    '#vr-ar',
-  ];
-
-  const lowerCaseMessage = message.content.toLocaleLowerCase();
-  const messageArray = lowerCaseMessage.split(' ');
-  const userHashtags = messageArray.filter((word) => hashtags.includes(word)); // filter for user hashtags
-
-  if (userHashtags.length > 0) {
-    message.guild.roles.cache.forEach((role) => role.delete());
-  }
-
-  userHashtags.forEach((hashtag) => {
-    const role = hashtag.replace('#', ''); // remove #
-    const discordRole = message.guild.roles.cache.find(
-      (discordRole) => discordRole.name === role
-    );
-
-    if (
-      !message.member._roles.some(
-        (memberRole) => memberRole.id === discordRole.id
-      )
-    ) {
-      message.member.roles
-        .add(discordRole.id)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+  const { name } = reaction.emoji;
+  const member = reaction.message.guild.members.cache.get(user.id);
+  // get id of message to add role reactions
+  const firstMessage = await reaction.message.channel.messages.fetch({
+    after: 0,
+    limit: 1,
   });
+  const firstMsgId = firstMessage.first().id;
+
+  if (reaction.message.id === firstMsgId) {
+    switch (name) {
+      case '🔴':
+        member.roles.add('767384522341482516');
+        break;
+      case '🟢':
+        member.roles.add('767367132249063454');
+        break;
+      case '🟠':
+        member.roles.add('767731817871704064');
+        break;
+      case '🔵':
+        member.roles.add('767730132139245610');
+        break;
+      case '🟣':
+        member.roles.add('767730135272390709');
+        break;
+    }
+  }
+});
+
+// role remover
+client.on('messageReactionRemove', async (reaction, user) => {
+  if (reaction.message.channel.name !== '✅choose-role') return;
+
+  const { name } = reaction.emoji;
+  const member = reaction.message.guild.members.cache.get(user.id);
+  // get id of message to add role reactions
+  const firstMessage = await reaction.message.channel.messages.fetch({
+    after: 0,
+    limit: 1,
+  });
+  const firstMsgId = firstMessage.first().id;
+
+  if (reaction.message.id === firstMsgId) {
+    switch (name) {
+      case '🔴':
+        member.roles.remove('767384522341482516');
+        break;
+      case '🟢':
+        member.roles.remove('767367132249063454');
+        break;
+      case '🟠':
+        member.roles.remove('767731817871704064');
+        break;
+      case '🔵':
+        member.roles.remove('767730132139245610');
+        break;
+      case '🟣':
+        member.roles.remove('767730135272390709');
+        break;
+    }
+  }
 });
