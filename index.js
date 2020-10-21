@@ -21,7 +21,7 @@ client.on('message', async (message) => {
   if (message.member._roles.length > 0) return;
 
   // add member role
-  const member = await message.member.roles.add('767719049168945212'); // TODO: change to member role in production discord
+  const member = await message.member.roles.add('767710436480778270'); // TODO: change to member role in production discord
 
   console.log(`New member: ${member.user.username}`);
 });
@@ -42,19 +42,19 @@ client.on('messageReactionAdd', async (reaction, user) => {
   if (reaction.message.id === firstMsgId) {
     switch (name) {
       case '🔴':
-        member.roles.add('767384522341482516');
+        member.roles.add('766274375921696798');
         break;
       case '🟢':
-        member.roles.add('767367132249063454');
+        member.roles.add('766274351573893143');
         break;
       case '🟠':
-        member.roles.add('767731817871704064');
+        member.roles.add('767449505477820417');
         break;
       case '🔵':
-        member.roles.add('767730132139245610');
+        member.roles.add('766661134602207232');
         break;
       case '🟣':
-        member.roles.add('767730135272390709');
+        member.roles.add('766593195714805771');
         break;
     }
   }
@@ -76,19 +76,19 @@ client.on('messageReactionRemove', async (reaction, user) => {
   if (reaction.message.id === firstMsgId) {
     switch (name) {
       case '🔴':
-        member.roles.remove('767384522341482516');
+        member.roles.remove('766274375921696798');
         break;
       case '🟢':
-        member.roles.remove('767367132249063454');
+        member.roles.remove('766274351573893143');
         break;
       case '🟠':
-        member.roles.remove('767731817871704064');
+        member.roles.remove('767449505477820417');
         break;
       case '🔵':
-        member.roles.remove('767730132139245610');
+        member.roles.remove('766661134602207232');
         break;
       case '🟣':
-        member.roles.remove('767730135272390709');
+        member.roles.remove('766593195714805771');
         break;
     }
   }
